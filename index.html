@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>✨ Solcito — Hoy soy</title>
+
+  <style>
+    :root {
+      --bg:#0b0f19;
+      --card:#111827;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#fbbf24;
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1000px 700px at 15% 10%, rgba(251,191,36,.18), transparent 55%),
+        radial-gradient(900px 700px at 90% 30%, rgba(59,130,246,.12), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+
+    .wrap {
+      width: min(680px, 100%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .brand strong { color: var(--text); }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17,24,39,.95), rgba(17,24,39,.8));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(251,191,36,.35);
+      background: rgba(251,191,36,.12);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 6px 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    .footer {
+      margin-top: 16px;
+      font-size: 12px;
+      color: rgba(156,163,175,.85);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="brand">✨ <strong>Be A Little Sun ~ Solcito ☀️</strong></div>
+
+    <div class="card">
+      <div class="tag">☀️ Hoy soy</div>
+      <h1 id="qTitle"></h1>
+      <p id="qDesc"></p>
+
+      <div class="footer">
+        Volvé a este link cuando necesites recordarlo 🌱
+      </div>
+
+      <!--
+      BOTÓN OPCIONAL (DEJADO COMENTADO A PROPÓSITO)
+
+      <button onclick="pickNew()">Elegir otra cualidad</button>
+      -->
+    </div>
+  </div>
+
+  <script>
+    const qualities = [
+      { title: "Presencia", desc: "Atención intencional al momento, sin juicio. Se siente como volver al cuerpo y al ahora." },
+      { title: "Autocompasión", desc: "Me trato con amabilidad cuando fallo, sin drama ni crueldad interna. Se siente como sostenerme." },
+      { title: "Ecuanimidad", desc: "Mantengo estabilidad interna ante lo agradable y lo difícil; respondo, no reacciono. Se siente como mente nivelada." },
+      { title: "Gratitud lúcida", desc: "Reconozco lo valioso y significativo, sin negar lo que duele. Se siente como amplitud y calidez." },
+      { title: "Flexibilidad psicológica", desc: "Puedo estar con lo que siento o pienso sin que me domine, y actuar según valores. Se siente como libertad interna." },
+      { title: "Discernimiento", desc: "Distingo impulso y verdad, miedo e intuición, ruido y señal. Se siente como claridad silenciosa." },
+      { title: "Autorregulación", desc: "Elijo estrategias antes de explotar: reencuadro, cambio foco, ajusto respuesta. Se siente como conducción consciente." },
+      { title: "Valentía serena", desc: "Hago lo correcto aunque incomode; sostengo límites con calma. Se siente como firmeza suave." },
+      { title: "Integridad", desc: "Alineo palabra, intención y acción. Se siente como coherencia y paz." },
+      { title: "Humildad", desc: "Aprendo sin defender el ego; reconozco errores sin desvalorizarme. Se siente como liviandad." },
+      { title: "Compasión activa", desc: "Veo humanidad en mí y en otros, y actúo para aliviar. Se siente como corazón con dirección." },
+      { title: "Paciencia", desc: "Sostengo procesos, propios y ajenos, sin apurar por ansiedad. Se siente como madurez." }
+    ];
+
+    const STORAGE_KEY = "solcito_cualidad_del_dia";
+
+    function todayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    }
+
+    function pickAndSave() {
+      const index = Math.floor(Math.random() * qualities.length);
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ date: todayKey(), index })
+      );
+      return qualities[index];
+    }
+
+    function getTodayQuality() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return pickAndSave();
+
+      try {
+        const data = JSON.parse(saved);
+        if (data.date === todayKey()) {
+          return qualities[data.index];
+        }
+      } catch {}
+
+      return pickAndSave();
+    }
+
+    const q = getTodayQuality();
+    document.getElementById("qTitle").textContent = `Hoy soy: ${q.title}`;
+    document.getElementById("qDesc").textContent = q.desc;
+
+    /*
+    FUNCIÓN OPCIONAL PARA ACTIVAR SI QUERÉS EL BOTÓN
+
+    function pickNew() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+    */
+  </script>
+</body>
+</html>
